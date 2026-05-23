@@ -1,6 +1,7 @@
 package pl.vizja.xdbackend.security;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +15,9 @@ public class AuthorizationChecker {
     }
 
     public boolean isOwner(Long ownerId) {
-        return SecurityContextHolder.getContext()
+        var user = (User) SecurityContextHolder.getContext()
                 .getAuthentication()
-                .getPrincipal().equals(ownerId);
+                .getPrincipal();
+        return user.getUsername().equals(String.valueOf(ownerId));
     }
 }

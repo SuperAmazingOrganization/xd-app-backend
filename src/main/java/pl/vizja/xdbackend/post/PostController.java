@@ -26,6 +26,7 @@ import java.util.List;
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 @Tag(name = "Posts")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 class PostController {
 
     private final PostService postService;

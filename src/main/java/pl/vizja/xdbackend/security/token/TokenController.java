@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tokens")
 @RequiredArgsConstructor
 @Tag(name = "Tokens")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 class TokenController {
 
     private final TokenService tokenService;

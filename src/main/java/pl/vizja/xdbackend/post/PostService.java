@@ -361,7 +361,7 @@ class PostService {
                 .id(Optional.of(comment.getId()))
                 .authorId(Optional.of(comment.getAuthor().getId()))
                 .postId(Optional.empty())
-                .parentId(Optional.of(null))
+                .parentId(Optional.ofNullable(null))
                 .body(comment.getBody())
                 .addedAt(comment.getAddedAt())
                 .updatedAt(comment.getUpdatedAt())

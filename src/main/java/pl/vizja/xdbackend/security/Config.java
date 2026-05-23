@@ -43,8 +43,9 @@ public class Config {
                 .authorizeHttpRequests(req -> req
                         //users
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         //tokens
-                        .requestMatchers(HttpMethod.POST,"/tokens").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/tokens").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/tokens").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/tokens/refresh").permitAll()
                         //swagger
