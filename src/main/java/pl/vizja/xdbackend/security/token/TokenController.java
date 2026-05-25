@@ -7,7 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import pl.vizja.xdbackend.user.UserService;
+import pl.vizja.xdbackend.user.dto.UserDTO;
 
 @RestController
 @RequestMapping("/tokens")
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 class TokenController {
 
     private final TokenService tokenService;
+    private final UserService userService;
 
     @Operation(summary = "Create tokens (access + refresh)")
     @PostMapping
@@ -41,5 +46,14 @@ class TokenController {
     ) {
         tokenService.deleteRefreshToken(deleteRefreshTokenDTO);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get current user info from token")
+    @GetMapping("/me")
+    ResponseEntity<UserDTO> getCurrentUser(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        Long userId = Long.parseLong(userDetails.getUsername());
+        return ResponseEntity.ok(userService.getUser(userId));
     }
 }

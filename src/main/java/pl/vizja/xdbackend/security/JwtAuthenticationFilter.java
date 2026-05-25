@@ -40,6 +40,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String accessToken = getAccessTokenFromRequest(request);
 
+            if (accessToken.isBlank()) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             String userId = tokenProcessor.extractUsernameFromToken(accessToken);
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {

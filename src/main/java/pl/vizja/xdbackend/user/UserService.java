@@ -26,7 +26,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-class UserService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
@@ -126,7 +126,7 @@ class UserService {
         return userRepository.count(spec);
     }
 
-    UserDTO getUser(
+    public UserDTO getUser(
             Long userId
     ) {
 
