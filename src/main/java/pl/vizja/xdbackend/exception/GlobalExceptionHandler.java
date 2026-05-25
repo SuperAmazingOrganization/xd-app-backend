@@ -6,6 +6,8 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -40,7 +42,7 @@ class GlobalExceptionHandler {
         return new ResponseEntity<>(ValidationExceptionDTO
                 .builder()
                 .code(400)
-                .message("Validation exception!")
+                .message("Błąd walidacji")
                 .exceptions(fieldExceptions)
                 .build(), HttpStatus.BAD_REQUEST);
     }
@@ -59,7 +61,7 @@ class GlobalExceptionHandler {
     ResponseEntity<ExceptionDTO> handleNoResourceFoundException(NoResourceFoundException ignored) {
         return new ResponseEntity<>(ExceptionDTO.builder()
                 .code(404)
-                .message("No such route!")
+                .message("Nie znaleziono ścieżki")
                 .build(), HttpStatus.NOT_FOUND);
     }
 
@@ -70,7 +72,7 @@ class GlobalExceptionHandler {
     ) {
         return new ResponseEntity<>(ExceptionDTO.builder()
                 .code(405)
-                .message("No such method for this route!")
+                .message("Nieobsługiwana metoda HTTP")
                 .build(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -81,7 +83,7 @@ class GlobalExceptionHandler {
     ) {
         return new ResponseEntity<>(ExceptionDTO.builder()
                 .code(400)
-                .message("Missing request body!")
+                .message("Brak wymaganego ciała żądania")
                 .build(), HttpStatus.BAD_REQUEST);
     }
 
@@ -92,7 +94,40 @@ class GlobalExceptionHandler {
     ) {
         return new ResponseEntity<>(ExceptionDTO.builder()
                 .code(400)
-                .message("Invalid path variable type")
+                .message("Nieprawidłowy typ parametru")
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    //bad login credentials
+    @ExceptionHandler(AuthenticationException.class)
+    ResponseEntity<ExceptionDTO> handleAuthenticationException(
+            AuthenticationException ignored
+    ) {
+        return new ResponseEntity<>(ExceptionDTO.builder()
+                .code(401)
+                .message("Nieprawidłowy login lub hasło")
+                .build(), HttpStatus.UNAUTHORIZED);
+    }
+
+    //access denied
+    @ExceptionHandler(AccessDeniedException.class)
+    ResponseEntity<ExceptionDTO> handleAccessDeniedException(
+            AccessDeniedException ignored
+    ) {
+        return new ResponseEntity<>(ExceptionDTO.builder()
+                .code(403)
+                .message("Brak dostępu")
+                .build(), HttpStatus.FORBIDDEN);
+    }
+
+    //illegal argument
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<ExceptionDTO> handleIllegalArgumentException(
+            IllegalArgumentException e
+    ) {
+        return new ResponseEntity<>(ExceptionDTO.builder()
+                .code(400)
+                .message(e.getMessage())
                 .build(), HttpStatus.BAD_REQUEST);
     }
 }

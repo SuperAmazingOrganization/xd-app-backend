@@ -8,23 +8,21 @@ import pl.vizja.xdbackend.user.validation.UniqueEmailConstraint;
 import pl.vizja.xdbackend.user.validation.UniqueUsernameConstraint;
 
 public record CreateUserDTO(
-        @Email(message = "must be a valid email")
+        @Email(message = "Nieprawidłowy format email")
         @UniqueEmailConstraint
-        @NotNull(message = "must not be empty")
+        @NotNull(message = "Email nie może być pusty")
         String email,
 
         String phone,
 
-        @Size(min = 1, max = 50, message = "must be between 1 and 50 characters long")
+        @Size(min = 1, max = 50, message = "Nazwa użytkownika musi mieć 1-50 znaków")
         @UniqueUsernameConstraint
-        @NotNull(message = "must not be empty")
+        @NotNull(message = "Nazwa użytkownika nie może być pusta")
         String username,
 
         @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
-                message = "must be between 1 and 50 characters long and have a minimum length of 8 characters, " +
-                        "include at least one uppercase english letter, one lowercase english letter, " +
-                        "one digit, and one special character")
-        @NotNull(message = "must not be empty")
+                message = "Hasło musi mieć min. 8 znaków, zawierać dużą literę, małą literę, cyfrę i znak specjalny")
+        @NotNull(message = "Hasło nie może być puste")
         String password)
 {
 }
