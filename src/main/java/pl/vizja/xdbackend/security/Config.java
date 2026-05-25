@@ -45,10 +45,14 @@ public class Config {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        //users
+                        //public read endpoints (unauthenticated users can view)
+                        .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                        //public write endpoints
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        //tokens
+                        //token endpoints (login/refresh/logout)
                         .requestMatchers(HttpMethod.POST, "/tokens").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/tokens").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/tokens/refresh").permitAll()
