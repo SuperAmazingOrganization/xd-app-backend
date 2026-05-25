@@ -79,9 +79,12 @@ public class UserService {
 
         constraintValidator.validate(createUserDTO);
 
+        String phone = createUserDTO.phone();
+        if (phone != null && phone.isBlank()) phone = null;
+
         User user = User.builder()
                 .email(createUserDTO.email())
-                .phone(createUserDTO.phone())
+                .phone(phone)
                 .username(createUserDTO.username())
                 .password(passwordEncoder.encode(createUserDTO.password()))
                 .build();

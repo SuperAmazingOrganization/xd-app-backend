@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import pl.vizja.xdbackend.user.validation.UniqueEmailConstraint;
-import pl.vizja.xdbackend.user.validation.UniquePhoneConstraint;
 import pl.vizja.xdbackend.user.validation.UniqueUsernameConstraint;
 
 public record CreateUserDTO(
@@ -14,9 +13,6 @@ public record CreateUserDTO(
         @NotNull(message = "must not be empty")
         String email,
 
-        @Pattern(regexp = "^\\+?[1-9][0-9]{7,14}$", message = "must be a valid phone number")
-        @UniquePhoneConstraint
-        @NotNull(message = "must not be empty")
         String phone,
 
         @Size(min = 1, max = 50, message = "must be between 1 and 50 characters long")
