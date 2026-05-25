@@ -92,7 +92,7 @@ public class UserService {
                 .id(Optional.of(user.getId()))
                 .role(Optional.empty())
                 .email(Optional.of(user.getEmail()))
-                .phone(Optional.of(user.getPhone()))
+                .phone(Optional.ofNullable(user.getPhone()))
                 .username(user.getUsername())
                 .profilePicUrl(user.getProfilePicUrl())
                 .backgroundPicUrl(user.getBackgroundPicUrl())
