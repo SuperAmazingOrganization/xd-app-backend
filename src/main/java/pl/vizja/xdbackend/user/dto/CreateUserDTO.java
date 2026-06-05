@@ -16,7 +16,6 @@ public record CreateUserDTO(
 
         @Pattern(regexp = "^\\+?[1-9][0-9]{7,14}$", message = "must be a valid phone number")
         @UniquePhoneConstraint
-        @NotNull(message = "must not be empty")
         String phone,
 
         @Size(min = 1, max = 50, message = "Nazwa użytkownika musi mieć 1-50 znaków")
