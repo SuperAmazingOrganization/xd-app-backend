@@ -46,16 +46,16 @@ public class Config {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         //public read endpoints (unauthenticated users can view)
-                        .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tags/**").permitAll()
                         //public write endpoints
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         //token endpoints (login/refresh/logout)
-                        .requestMatchers(HttpMethod.POST, "/tokens").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/tokens").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/tokens/refresh").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/tokens").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/tokens").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/tokens/refresh").permitAll()
                         //swagger
                         .requestMatchers(
                                 "/swagger-ui/**",
