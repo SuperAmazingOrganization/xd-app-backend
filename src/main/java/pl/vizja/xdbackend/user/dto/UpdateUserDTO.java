@@ -33,12 +33,6 @@ public record UpdateUserDTO(
                         "one digit, and one special character")
         String newPassword,
 
-        @Size(max = 2000, message = "must be 2000 characters long at most")
-        String profilePicUrl,
-
-        @Size(max = 2000, message = "must be 2000 characters long at most")
-        String backgroundPicUrl,
-
         @Size(min = 1, max = 500, message = "must bet between 1 and 500 characters long")
         String description,
 
