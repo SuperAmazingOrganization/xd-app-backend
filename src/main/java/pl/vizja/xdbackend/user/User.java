@@ -34,7 +34,7 @@ public class User {
 
     //https://uibakery.io/regex-library/phone-number
     @Pattern(regexp = "^\\+?[1-9][0-9]{7,14}$")
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String phone;
 
     @Size(min = 1, max = 50)

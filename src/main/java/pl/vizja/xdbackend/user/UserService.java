@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.vizja.xdbackend.security.AuthorizationChecker;
 import pl.vizja.xdbackend.shared.dto.CreateTagAssociationDTO;
+import pl.vizja.xdbackend.supabase_storage.PhotoService;
 import pl.vizja.xdbackend.tag.Tag;
 import pl.vizja.xdbackend.tag.TagRepository;
 import pl.vizja.xdbackend.tag.TagSpecification;
@@ -19,6 +20,9 @@ import pl.vizja.xdbackend.user.dto.CreateUserDTO;
 import pl.vizja.xdbackend.user.dto.UpdateUserDTO;
 import pl.vizja.xdbackend.user.dto.UserDTO;
 import pl.vizja.xdbackend.validation.CustomConstraintValidator;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +30,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-class UserService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
@@ -35,6 +39,7 @@ class UserService {
     private final AuthorizationChecker authorizationChecker;
     private final CustomConstraintValidator constraintValidator;
     private final PasswordEncoder passwordEncoder;
+    private final PhotoService photoService;
 
     List<UserDTO> getUsers(
             UserRole userRole,
@@ -92,7 +97,7 @@ class UserService {
                 .id(Optional.of(user.getId()))
                 .role(Optional.empty())
                 .email(Optional.of(user.getEmail()))
-                .phone(Optional.of(user.getPhone()))
+                .phone(Optional.ofNullable(user.getPhone()))
                 .username(user.getUsername())
                 .profilePicUrl(user.getProfilePicUrl())
                 .backgroundPicUrl(user.getBackgroundPicUrl())
@@ -126,7 +131,7 @@ class UserService {
         return userRepository.count(spec);
     }
 
-    UserDTO getUser(
+    public UserDTO getUser(
             Long userId
     ) {
 
@@ -154,8 +159,10 @@ class UserService {
 
     UserDTO updateUser(
             Long userId,
-            UpdateUserDTO updateUserDTO
-    ) {
+            UpdateUserDTO updateUserDTO,
+            MultipartFile profilePic,
+            MultipartFile backgroundPic
+    ) throws IOException {
 
         if (!userRepository.existsById(userId)) {
             throw new EntityNotFoundException("User (id=" + userId + ") was not found!");
@@ -177,14 +184,20 @@ class UserService {
             }
             user.setRole(updateUserDTO.role());
         }
-
         if (updateUserDTO.email() != null) user.setEmail(updateUserDTO.email());
         if (updateUserDTO.phone() != null) user.setPhone(updateUserDTO.phone());
         if (updateUserDTO.username() != null) user.setUsername(updateUserDTO.username());
         if (updateUserDTO.description() != null) user.setDescription(updateUserDTO.description());
-        if (updateUserDTO.profilePicUrl() != null) user.setProfilePicUrl(updateUserDTO.profilePicUrl());
-        if (updateUserDTO.backgroundPicUrl() != null) user.setBackgroundPicUrl(updateUserDTO.backgroundPicUrl());
         if (updateUserDTO.newPassword() != null) user.setPassword(passwordEncoder.encode(updateUserDTO.newPassword()));
+
+        if (profilePic != null && !profilePic.isEmpty()) {
+            String profilePicUrl = photoService.uploadPhoto(profilePic, String.valueOf(userId));
+            user.setProfilePicUrl(profilePicUrl);
+        }
+        if (backgroundPic != null && !backgroundPic.isEmpty()) {
+            String backgroundPicUrl = photoService.uploadPhoto(backgroundPic, String.valueOf(userId));
+            user.setBackgroundPicUrl(backgroundPicUrl);
+        }
 
         userRepository.save(user);
 

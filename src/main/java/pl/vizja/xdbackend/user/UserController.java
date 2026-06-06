@@ -6,14 +6,18 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.vizja.xdbackend.shared.dto.CreateTagAssociationDTO;
 import pl.vizja.xdbackend.tag.dto.TagDTO;
 import pl.vizja.xdbackend.shared.dto.CreateUserAssociationDTO;
 import pl.vizja.xdbackend.user.dto.CreateUserDTO;
 import pl.vizja.xdbackend.user.dto.UpdateUserDTO;
 import pl.vizja.xdbackend.user.dto.UserDTO;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -79,13 +83,14 @@ class UserController {
     }
 
     @Operation(summary = "Update a user")
-    @PatchMapping("/{userId}")
+    @PatchMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<UserDTO> updateUser(
             @PathVariable Long userId,
-            @RequestBody UpdateUserDTO updateUserDTO
-    ) {
-
-        return ResponseEntity.ok(userService.updateUser(userId, updateUserDTO));
+            @RequestPart("data") UpdateUserDTO updateUserDTO,
+            @RequestPart(value = "profilePic", required = false) MultipartFile profilePic,
+            @RequestPart(value = "backgroundPic", required = false) MultipartFile backgroundPic
+    ) throws IOException {
+        return ResponseEntity.ok(userService.updateUser(userId, updateUserDTO, profilePic, backgroundPic));
     }
 
     @Operation(summary = "Delete a user")
