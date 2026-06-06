@@ -62,6 +62,8 @@ public class Config {
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        //public uploads (served by LocalUploadsController in h2file profile)
+                        .requestMatchers("/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 //handling 401 & 403 exceptions here, not in GlobalExceptionHandler (Spring Security doesn't allow it)

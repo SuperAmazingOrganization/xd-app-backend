@@ -11,7 +11,7 @@ import pl.vizja.xdbackend.user.UserRepository;
 import pl.vizja.xdbackend.user.UserRole;
 
 @Component
-@Profile({"h2", "h2file"})
+@Profile("h2file")
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
 

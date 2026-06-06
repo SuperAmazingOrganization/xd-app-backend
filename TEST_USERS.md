@@ -1,10 +1,16 @@
-# Demo accounts (h2 profile only)
+# Demo accounts (h2file profile only)
 #
-# Created on first boot of the backend with SPRING_PROFILES_ACTIVE=h2 by
-# DataSeeder.java. Each is a regular user with the role USER. H2 is
-# in-memory, so accounts reset every time the backend restarts.
+# Seeded on first boot of the backend with `--spring.profiles.active=h2file`
+# by `DataSeeder.java`. Each is a regular user with the role USER. The
+# database is H2 in file mode at `~/xd-app-h2.mv.db`, so accounts
+# **persist across restarts** until you delete that file:
 #
-# Login identifier can be either the email or the username.
+#   rm ~/xd-app-h2.mv.db*
+#
+# The seeder is a no-op if the table already has any user, so re-runs
+# after manual deletions do not duplicate.
+#
+# Login identifier can be the username, email, or phone.
 #
 # | username | email                | password         | phone        |
 # |----------|----------------------|------------------|--------------|
@@ -18,5 +24,15 @@
 #        -H "Content-Type: application/json" \
 #        -d '{"identifier":"alice","password":"Alice1234!@#$"}'
 #
-# These are NOT seeded in the default (Supabase) profile — that database
-# is untouched.
+# Upload a profile pic:
+#   curl -X PATCH http://localhost:8080/api/v1/users/1 \
+#        -H "Authorization: Bearer <ACCESS_TOKEN>" \
+#        -F 'data={"description":"Hi!"};type=application/json' \
+#        -F "profilePic=@./photo.png;type=image/png"
+#   # response contains `profilePicUrl` like
+#   #   http://localhost:8080/api/v1/uploads/1/<uuid>_photo.png
+#   # The file is also on disk at
+#   #   xd-app-backend/uploads/1/<uuid>_photo.png
+#
+# These are NOT seeded when running against Supabase — the prod/staging
+# database is untouched.
